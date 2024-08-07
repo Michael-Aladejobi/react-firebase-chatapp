@@ -10,6 +10,11 @@ const App = () => {
                 <Chat />
                 <Detail />
             </div>
+            <div className="maintenance">
+                <small>
+                    &copy; All rights Reserved | Maintained by ETTRONICS TEAM
+                </small>
+            </div>
         </>
     );
 };

@@ -22,47 +22,7 @@ const Chatlist = () => {
                 <img src="avatar.png" alt="" />
                 <div className="texts">
                     <span>Michael A</span>
-                    <p>Hello</p>
-                </div>
-            </div>
-
-            <div className="item">
-                <img src="avatar.png" alt="" />
-                <div className="texts">
-                    <span>Michael A</span>
-                    <p>Hello</p>
-                </div>
-            </div>
-
-            <div className="item">
-                <img src="avatar.png" alt="" />
-                <div className="texts">
-                    <span>Michael A</span>
-                    <p>Hello</p>
-                </div>
-            </div>
-
-            <div className="item">
-                <img src="avatar.png" alt="" />
-                <div className="texts">
-                    <span>Michael A</span>
-                    <p>Hello</p>
-                </div>
-            </div>
-
-            <div className="item">
-                <img src="avatar.png" alt="" />
-                <div className="texts">
-                    <span>Michael A</span>
-                    <p>Hello</p>
-                </div>
-            </div>
-
-            <div className="item">
-                <img src="avatar.png" alt="" />
-                <div className="texts">
-                    <span>Michael A</span>
-                    <p>Hello</p>
+                    <p>YO!</p>
                 </div>
             </div>
 

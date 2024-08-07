@@ -28,4 +28,8 @@ body {
     display: flex;
 }
 
-
+.maintenance{
+    text-align: center;
+    margin-top: 10px;
+    color:rgba(240, 255, 255, 0.39);
+}
