@@ -1,19 +1,22 @@
 import List from "./components/list/List";
 import Chat from "./components/chat/Chat";
 import Detail from "./components/detail/Detail";
+import Login from "./components/login/Login";
 
 const App = () => {
+    const user = false;
     return (
         <>
             <div className="container">
-                <List />
-                <Chat />
-                <Detail />
-            </div>
-            <div className="maintenance">
-                <small>
-                    &copy; All rights Reserved | Maintained by ETTRONICS TEAM
-                </small>
+                {user ? (
+                    <>
+                        <List />
+                        <Chat />
+                        <Detail />
+                    </>
+                ) : (
+                    <Login />
+                )}
             </div>
         </>
     );

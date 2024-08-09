@@ -17,8 +17,9 @@ body {
 }
 
 .container {
-    width: 90vw;
+    width: auto;
     height: 90vh;
+    margin: auto 10px;
     background-color: rgba(17, 25, 40, 0.75);
     border-radius: 12px;
     backdrop-filter: blur(19px) saturate(180%);
@@ -28,6 +29,7 @@ body {
 
 .maintenance {
     text-align: center;
-    margin-top: 10px;
     color: rgba(240, 255, 255, 0.39);
+    font-size: 15px;
+    margin: auto;
 }

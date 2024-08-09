@@ -32,28 +32,28 @@ const Detail = () => {
                                 <img src="./ett_logo.jpg" alt="" />
                                 <span>photo_2024_1.jpg</span>
                             </div>
-                            <img src="./download.png" alt="" className="icon"/>
+                            <img src="./download.png" alt="" className="icon" />
                         </div>
                         <div className="photoItem">
                             <div className="photoDetail">
                                 <img src="./ett_logo.jpg" alt="" />
                                 <span>photo_2024_1.jpg</span>
                             </div>
-                            <img src="./download.png" alt="" className="icon"/>
+                            <img src="./download.png" alt="" className="icon" />
                         </div>
                         <div className="photoItem">
                             <div className="photoDetail">
                                 <img src="./ett_logo.jpg" alt="" />
                                 <span>photo_2024_1.jpg</span>
                             </div>
-                            <img src="./download.png" alt="" className="icon"/>
+                            <img src="./download.png" alt="" className="icon" />
                         </div>
                         <div className="photoItem">
                             <div className="photoDetail">
                                 <img src="./ett_logo.jpg" alt="" />
                                 <span>photo_2024_1.jpg</span>
                             </div>
-                            <img src="./download.png" alt="" className="icon"/>
+                            <img src="./download.png" alt="" className="icon" />
                         </div>
                     </div>
                 </div>
@@ -64,6 +64,13 @@ const Detail = () => {
                     </div>
                 </div>
                 <button>Block User</button>
+                <button className="logout">Logout</button>
+                <div className="maintenance">
+                    <small>
+                        &copy; All rights Reserved | Maintained by ETTRONICS
+                        TEAM
+                    </small>
+                </div>
             </div>
         </div>
     );
