@@ -85,10 +85,10 @@
                         border-top-left-radius: 0px;
                         border-bottom-right-radius: 0px;
                     }
-                    span {
-                        font-size: 12px;
-                    }
                 }
+            }
+            span {
+                font-size: 12px;
             }
             img {
                 width: 30px;
