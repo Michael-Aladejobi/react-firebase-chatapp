@@ -67,6 +67,7 @@ const Chat = () => {
                 </div>
                 <div className="message own">
                     <div className="texts">
+                        <img src="./ett_logo.jpg" alt="" />
                         <p>
                             Lorem ipsum, dolor sit amet consectetur adipisicing
                             elit. Totam soluta laboriosam similique ipsum

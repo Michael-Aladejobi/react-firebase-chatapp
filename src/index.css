@@ -7,9 +7,7 @@
 }
 
 body {
-    /* background-image: url("/bg.jpg"); */
-    background-color: rgb(23, 32, 48);
-
+    background-image: url("/bg.jpg");
 
     display: flex;
     align-items: center;
@@ -28,8 +26,8 @@ body {
     display: flex;
 }
 
-.maintenance{
+.maintenance {
     text-align: center;
     margin-top: 10px;
-    color:rgba(240, 255, 255, 0.39);
+    color: rgba(240, 255, 255, 0.39);
 }
