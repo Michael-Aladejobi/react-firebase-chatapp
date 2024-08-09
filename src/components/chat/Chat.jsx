@@ -21,7 +21,7 @@ const Chat = () => {
                 <div className="user">
                     <img src="./avatar.png" alt="" />
                     <div className="texts">
-                        <span>Jane Doe</span>
+                        <span>Michael A.</span>
                         <p>
                             Lorem ipsum, dolor sit amet consectetur adipisicing
                             elit.
