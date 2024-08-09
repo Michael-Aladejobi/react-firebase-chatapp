@@ -11,8 +11,9 @@ function AddUser() {
             <div className="user">
                 <div className="detail">
                     <img src="./avatar.png" alt="" />
+                    <span>Michael A.</span>
                 </div>
-                <button></button>
+                <button>Add User</button>
             </div>
         </div>
     );
