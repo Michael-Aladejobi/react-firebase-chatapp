@@ -1,14 +1,21 @@
 import { toast } from "react-toastify";
 import "./login.css";
 import { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../lib/firebase";
+import {
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth, db } from "../../lib/firebase";
+import { upload } from "../../lib/upload";
+import { doc, setDoc } from "firebase/firestore";
 
 const Login = () => {
     const [avatar, setAvatar] = useState({
         file: null,
         url: "",
     });
+
+    const [loading, setLoading] = useState(false);
 
     const handleAvatar = (e) => {
         if (e.target.files[0]) {
@@ -19,11 +26,25 @@ const Login = () => {
         }
     };
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
+        setLoading(true);
+
+        const formData = new FormData(e.target);
+
+        const { email, password } = Object.fromEntries(formData);
+
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+        } catch (err) {
+            toast.error(err.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleRegister = async (e) => {
+        setLoading(true);
         e.preventDefault();
         const formData = new FormData(e.target);
 
@@ -35,10 +56,27 @@ const Login = () => {
                 email,
                 password
             );
-            toast.success("Account Created Successfully.");
+
+            const imgUrl = await upload(avatar.file);
+
+            await setDoc(doc(db, "users", res.user.uid), {
+                avatar: imgUrl,
+                username,
+                email,
+                id: res.user.uid,
+                blocked: [],
+            });
+
+            await setDoc(doc(db, "userchats", res.user.uid), {
+                chats: [],
+            });
+
+            toast.success("Account Created! You can LOGIN now...");
         } catch (err) {
             toast.error(err.message);
             console.log(err);
+        } finally {
+            setLoading(false);
         }
     };
     return (
@@ -52,7 +90,9 @@ const Login = () => {
                         placeholder="Password"
                         name="password"
                     />
-                    <button>Sign In</button>
+                    <button disabled={loading}>
+                        {loading ? "Loading..." : "Login"}
+                    </button>
                 </form>
             </div>
             <div className="separator"></div>
@@ -77,7 +117,9 @@ const Login = () => {
                         placeholder="Password"
                         name="password"
                     />
-                    <button>Sign Up</button>
+                    <button disabled={loading}>
+                        {loading ? "Loading..." : "Sign Up"}
+                    </button>
                 </form>
             </div>
         </div>
