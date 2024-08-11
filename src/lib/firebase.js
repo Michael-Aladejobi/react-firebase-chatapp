@@ -4,7 +4,7 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-    apiKey: import.meta.env.VITE_API_KEY,
+    apiKey: 'AIzaSyDakPS441Y14aPISzhbXAGdLhUcaOgQh98',
     authDomain: "chatapp-fd4b7.firebaseapp.com",
     projectId: "chatapp-fd4b7",
     storageBucket: "chatapp-fd4b7.appspot.com",
@@ -12,7 +12,10 @@ const firebaseConfig = {
     appId: "1:409619510115:web:5d17b31b8d39f61352d956",
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth();
-export const db = getFirestore();
-export const storage = getStorage();
+
+// Initialize Firebase services
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+export const storage = getStorage(app);
