@@ -7,7 +7,10 @@
 }
 
 body {
-    background-image: url("/bg.jpg");
+    /* background-image: url("/bg.jpg"); */
+    background-image: url("/bg1.PNG");
+    background-repeat: no-repeat;
+    background-size: cover;
 
     display: flex;
     align-items: center;
@@ -32,4 +35,11 @@ body {
     color: rgba(240, 255, 255, 0.39);
     font-size: 15px;
     margin: auto;
+}
+
+.loading {
+    padding: 50px;
+    font-style: 36px;
+    border-radius: 10px;
+    background-color: rgba(17, 25, 40, 0.75);
 }

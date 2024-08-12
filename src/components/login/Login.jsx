@@ -36,6 +36,8 @@ const Login = () => {
 
         try {
             await signInWithEmailAndPassword(auth, email, password);
+                        toast.success("SUCCESSFUL");
+
         } catch (err) {
             toast.error(err.message);
         } finally {

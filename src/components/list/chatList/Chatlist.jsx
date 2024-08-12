@@ -1,9 +1,29 @@
 import AddUser from "./addUser/AddUser";
 import "./chatlist.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useUserStore } from "../../../lib/userStore";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "../../../lib/firebase";
 
 const Chatlist = () => {
     const [addMode, setAddMode] = useState(false);
+    const [chats, setChats] = useState([[]]);
+
+    const { currentUser } = useUserStore();
+
+    useEffect(() => {
+        const unSub = onSnapshot(
+            doc(db, "userChats", currentUser.id),
+            (doc) => {
+                setChats(doc.data());
+            }
+        );
+
+        return () => {
+            unSub();
+        };
+    }, [currentUser.id]);
+
     return (
         <div className="chatlist">
             <div className="search">
@@ -19,37 +39,15 @@ const Chatlist = () => {
                 />
             </div>
 
-            <div className="item">
-                <img src="avatar.png" alt="" />
-                <div className="texts">
-                    <span>Michael A</span>
-                    <p>YO!</p>
-                </div>
-            </div>
-
-            <div className="item">
-                <img src="avatar.png" alt="" />
-                <div className="texts">
-                    <span>Michael A</span>
-                    <p>Hello</p>
-                </div>
-            </div>
-
-            <div className="item">
-                <img src="avatar.png" alt="" />
-                <div className="texts">
-                    <span>Michael A</span>
-                    <p>Hello</p>
-                </div>
-            </div>
-
-            <div className="item">
-                <img src="avatar.png" alt="" />
-                <div className="texts">
-                    <span>Michael A</span>
-                    <p>Hello</p>
-                </div>
-            </div>
+            {chats.map((chat) => {
+                <div className="item" key={chat.chatId}>
+                    <img src="avatar.png" alt="" />
+                    <div className="texts">
+                        <span>Michael A</span>
+                        <p>{chat.lastMessage}</p>
+                    </div>
+                </div>;
+            })}
 
             {addMode && <AddUser />}
         </div>
