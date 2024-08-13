@@ -16,7 +16,7 @@ import { db } from "../../../../lib/firebase";
 import { useUserStore } from "../../../../lib/userStore";
 
 function AddUser() {
-    const [user, setUser] = useState(null); // Ensure useState is imported and used
+    const [user, setUser] = useState(null);
     const { currentUser } = useUserStore();
 
     const handleSearch = async (e) => {
@@ -26,57 +26,99 @@ function AddUser() {
 
         try {
             const userRef = collection(db, "users");
-
-            // Query for username in lowercase
             const q = query(userRef, where("username", "==", username));
             const querySnapShot = await getDocs(q);
 
             if (!querySnapShot.empty) {
                 setUser(querySnapShot.docs[0].data());
             } else {
-                setUser(null); // Reset user state if no user is found
+                setUser(null);
             }
         } catch (err) {
             console.log(err);
-            setUser(null); // Reset user state if an error occurs
+            setUser(null);
         }
     };
 
-    const handleAdd = async () => {
-        if (!user) return;
+    
+        const handleAdd = async () => {
+            if (!user) return;
 
-        const chatRef = doc(db, "chats", user.id); // Use user.id as the document ID
+            const chatRef = doc(db, "chats", user.id);
 
-        try {
-            // Check if the chat document already exists
-            const newChatRef = await getDoc(chatRef);
+            try {
+                const newChatDoc = await getDoc(chatRef);
 
-            await setDoc(newChatRef, {
-                createdAt: serverTimestamp(),
-                messages: [],
-            });
+                if (!newChatDoc.exists()) {
+                    // Create the chat document if it doesn't exist
+                    await setDoc(chatRef, {
+                        createdAt: serverTimestamp(),
+                        messages: [],
+                    });
+                }
 
-            await updateDoc(doc(userChatsRef, user.id), {
-                chats: arrayUnion({
-                    chatId: newChatRef.id,
-                    lastMessage: "",
-                    receiverId: currentUser.id,
-                    updatedAt: Date.now(),
-                }),
-            });
+                const userChatsRef = doc(db, "userChats", user.id);
+                const userChatsSnap = await getDoc(userChatsRef);
 
-            await updateDoc(doc(userChatsRef, currentUser.id), {
-                chats: arrayUnion({
-                    chatId: newChatRef.id,
-                    lastMessage: "",
-                    receiverId: user.id,
-                    updatedAt: Date.now(),
-                }),
-            });
-        } catch (err) {
-            console.log(err);
-        }
-    };
+                if (!userChatsSnap.exists()) {
+                    // If the user's chat document doesn't exist, create it
+                    await setDoc(userChatsRef, {
+                        chats: [
+                            {
+                                chatId: chatRef.id,
+                                lastMessage: "",
+                                receiverId: currentUser.id,
+                                updatedAt: Date.now(),
+                            },
+                        ],
+                    });
+                } else {
+                    // If it exists, update it
+                    await updateDoc(userChatsRef, {
+                        chats: arrayUnion({
+                            chatId: chatRef.id,
+                            lastMessage: "",
+                            receiverId: currentUser.id,
+                            updatedAt: Date.now(),
+                        }),
+                    });
+                }
+
+                const currentUserChatsRef = doc(
+                    db,
+                    "userChats",
+                    currentUser.id
+                );
+                const currentUserChatsSnap = await getDoc(currentUserChatsRef);
+
+                if (!currentUserChatsSnap.exists()) {
+                    // If the current user's chat document doesn't exist, create it
+                    await setDoc(currentUserChatsRef, {
+                        chats: [
+                            {
+                                chatId: chatRef.id,
+                                lastMessage: "",
+                                receiverId: user.id,
+                                updatedAt: Date.now(),
+                            },
+                        ],
+                    });
+                } else {
+                    // If it exists, update it
+                    await updateDoc(currentUserChatsRef, {
+                        chats: arrayUnion({
+                            chatId: chatRef.id,
+                            lastMessage: "",
+                            receiverId: user.id,
+                            updatedAt: Date.now(),
+                        }),
+                    });
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        };
+
 
     return (
         <div className="addUser">
