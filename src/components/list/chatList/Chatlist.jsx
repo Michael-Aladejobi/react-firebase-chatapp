@@ -2,7 +2,7 @@ import AddUser from "./addUser/AddUser";
 import "./chatlist.css";
 import { useEffect, useState } from "react";
 import { useUserStore } from "../../../lib/userStore";
-import { doc, onSnapshot } from "firebase/firestore";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { db } from "../../../lib/firebase";
 
 const Chatlist = () => {
@@ -14,8 +14,20 @@ const Chatlist = () => {
     useEffect(() => {
         const unSub = onSnapshot(
             doc(db, "userChats", currentUser.id),
-            (doc) => {
-                setChats(doc.data());
+            async (res) => {
+                const items = res.data().chats;
+
+                const promises = items.map(async (item) => {
+                    const userDocRef = doc(db, "users", item.receiverId);
+                    const userDocSnap = await getDoc(userDocRef);
+
+                    const user = userDocSnap.data();
+
+                    return { ...item, user };
+                });
+
+                const chatData = await Promise.all(promises);
+                setChats(chatData.sort((a, b) => b.updatedAt - a.updatedAt));
             }
         );
 
@@ -41,9 +53,9 @@ const Chatlist = () => {
 
             {chats.map((chat) => {
                 <div className="item" key={chat.chatId}>
-                    <img src="avatar.png" alt="" />
+                    <img src={chat.user.avatar || "avatar.png"} alt="" />
                     <div className="texts">
-                        <span>Michael A</span>
+                        <span>{chat.user.username}</span>
                         <p>{chat.lastMessage}</p>
                     </div>
                 </div>;
