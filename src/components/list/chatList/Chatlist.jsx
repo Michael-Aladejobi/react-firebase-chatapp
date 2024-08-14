@@ -2,7 +2,7 @@ import AddUser from "./addUser/AddUser";
 import "./chatlist.css";
 import { useEffect, useState } from "react";
 import { useUserStore } from "../../../lib/userStore";
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../../../lib/firebase";
 import { useChatStore } from "../../../lib/chatStore";
 
@@ -11,39 +11,62 @@ const Chatlist = () => {
     const [chats, setChats] = useState([]);
 
     const { currentUser } = useUserStore();
-    const { chatId, changeChat } = useChatStore();
+    const { changeChat } = useChatStore();
 
     useEffect(() => {
-        const unSub = onSnapshot(
-            doc(db, "userChats", currentUser.id),
-            async (res) => {
-                const data = res.data();
-                if (data && data.chats) {
-                    const items = data.chats;
+        if (currentUser?.id) {
+            const unSub = onSnapshot(
+                doc(db, "userChats", currentUser.id),
+                async (res) => {
+                    const data = res.data();
+                    if (data && data.chats) {
+                        const items = data.chats;
 
-                    const promises = items.map(async (item) => {
-                        const userDocRef = doc(db, "users", item.receiverId);
-                        const userDocSnap = await getDoc(userDocRef);
-                        const user = userDocSnap.data();
-                        return { ...item, user };
-                    });
+                        const promises = items.map(async (item) => {
+                            const userDocRef = doc(
+                                db,
+                                "users",
+                                item.receiverId
+                            );
+                            const userDocSnap = await getDoc(userDocRef);
+                            const user = userDocSnap.data();
+                            return { ...item, user };
+                        });
 
-                    const chatData = await Promise.all(promises);
-                    setChats(
-                        chatData.sort((a, b) => b.updatedAt - a.updatedAt)
-                    );
+                        const chatData = await Promise.all(promises);
+                        setChats(
+                            chatData.sort((a, b) => b.updatedAt - a.updatedAt)
+                        );
+                    }
                 }
-            }
-        );
+            );
 
-        return () => {
-            unSub();
-        };
+            return () => {
+                unSub();
+            };
+        }
     }, [currentUser.id]);
 
-    const handleSelect = async (chat)=>{
-changeChat(chat.chatId,chat.user);
-    }
+    const handleSelect = async (chat) => {
+        try {
+            const updatedChats = chats.map((item) => {
+                if (item.chatId === chat.chatId) {
+                    return { ...item, isSeen: true };
+                }
+                return item;
+            });
+
+            const userChatsRef = doc(db, "userChats", currentUser.id);
+
+            await updateDoc(userChatsRef, {
+                chats: updatedChats.map(({ user, ...rest }) => rest),
+            });
+
+            changeChat(chat.chatId, chat.user);
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
     return (
         <div className="chatlist">
@@ -61,7 +84,16 @@ changeChat(chat.chatId,chat.user);
             </div>
 
             {chats.map((chat) => (
-                <div className="item" key={chat.chatId} onClick={()=> handleSelect(chat)}>
+                <div
+                    className="item"
+                    key={chat.chatId}
+                    onClick={() => handleSelect(chat)}
+                    style={{
+                        backgroundColor: chat?.isSeen
+                            ? "transparent"
+                            : "#5183fe",
+                    }}
+                >
                     <img src={chat.user.avatar || "avatar.png"} alt="" />
                     <div className="texts">
                         <span>{chat.user.username}</span>

@@ -11,9 +11,10 @@ import {
 import { db } from "../../lib/firebase";
 import { useChatStore } from "../../lib/chatStore";
 import { useUserStore } from "../../lib/userStore";
+
 const Chat = () => {
     const [open, setOpen] = useState(false);
-    const [chat, setChat] = useState(false);
+    const [chat, setChat] = useState(null);
     const [text, setText] = useState("");
 
     const { currentUser } = useUserStore();
@@ -23,25 +24,24 @@ const Chat = () => {
 
     useEffect(() => {
         endRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, []);
+    }, [chat]);
 
     useEffect(() => {
-        const unSub = onSnapshot(doc(db, "chats", chatId), (res) => {
-            setChat(res.data());
-        });
+        if (chatId) {
+            const unSub = onSnapshot(doc(db, "chats", chatId), (res) => {
+                setChat(res.data());
+            });
 
-        return () => {
-            unSub();
-        };
+            return () => {
+                unSub();
+            };
+        }
     }, [chatId]);
-
-    console.log(chat);
 
     const handleEmoji = (e) => {
         setText((prev) => prev + e.emoji);
         setOpen(false);
     };
-    console.log(text);
 
     const handleSend = async () => {
         if (text === "") return;
@@ -57,36 +57,40 @@ const Chat = () => {
 
             const userIDs = [currentUser.id, user.id];
             userIDs.forEach(async (id) => {
-                const userChatsRef = doc(db, "userchats", id);
+                const userChatsRef = doc(db, "userChats", id);
                 const userChatsSnapshot = await getDoc(userChatsRef);
 
                 if (userChatsSnapshot.exists()) {
                     const userChatsData = userChatsSnapshot.data();
-
                     const chatIndex = userChatsData.chats.findIndex(
                         (c) => c.chatId === chatId
                     );
-                    userChatsData.chats[chatIndex].lastMessage = text;
-                    userChatsData.chats[chatIndex].isSeen =
-                        id === currentUser.id ? true : false;
-                    userChatsData.chats[chatIndex].updatedAt = Date.now();
 
-                    await updateDoc(userChatsRef, {
-                        chats: userChatsData.chats,
-                    });
+                    if (chatIndex !== -1) {
+                        userChatsData.chats[chatIndex].lastMessage = text;
+                        userChatsData.chats[chatIndex].isSeen =
+                            id === currentUser.id ? true : false;
+                        userChatsData.chats[chatIndex].updatedAt = Date.now();
+
+                        await updateDoc(userChatsRef, {
+                            chats: userChatsData.chats,
+                        });
+                    }
                 }
             });
+            setText("");
         } catch (err) {
             console.log(err);
         }
     };
+
     return (
         <div className="chat">
             <div className="top">
                 <div className="user">
                     <img src="./avatar.png" alt="" />
                     <div className="texts">
-                        <span>Michael A.</span>
+                        <span>{user?.username}</span>
                         <p>
                             Lorem ipsum, dolor sit amet consectetur adipisicing
                             elit.
@@ -100,15 +104,24 @@ const Chat = () => {
                 </div>
             </div>
             <div className="center">
-                {chat?.messages?.map((message) => {
-                    <div className="message own" key={message?.createdAt}>
+                {chat?.messages?.map((message, index) => (
+                    <div
+                        className={`message ${
+                            message.senderId === currentUser.id ? "own" : ""
+                        }`}
+                        key={index}
+                    >
                         <div className="texts">
-                            {message.img && <img src={message.img} alt="" />}{" "}
-                            <p>message.text</p>
-                            <span>{message}</span>
+                            {message.img && <img src={message.img} alt="" />}
+                            <p>{message.text}</p>
+                            <span>
+                                {new Date(
+                                    message.createdAt.toDate()
+                                ).toLocaleTimeString()}
+                            </span>
                         </div>
-                    </div>;
-                })}
+                    </div>
+                ))}
                 <div ref={endRef}></div>
             </div>
             <div className="bottom">
