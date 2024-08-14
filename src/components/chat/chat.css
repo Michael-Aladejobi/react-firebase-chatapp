@@ -69,10 +69,11 @@
                 align-self: flex-end;
                 .texts {
                     img {
-                        width: 100%;
-                        height: 300px;
+                        width: 60%;
+                        height: 200px;
                         border-radius: 10px;
                         object-fit: cover;
+                        margin-left: 125px;
                     }
                     p {
                         border-left: 1px solid red;
@@ -80,7 +81,7 @@
                         border-bottom: 1px solid green;
                         border-top: 1px solid gray;
                         background-color: #5182fe07;
-                        padding: 20px;
+                        padding: 10px;
                         border-radius: 20px;
                         border-top-left-radius: 0px;
                         border-bottom-right-radius: 0px;
@@ -100,6 +101,13 @@
                 flex: 1;
                 flex-direction: column;
                 gap: 5px;
+
+                img {
+                    width: 60%;
+                    height: 200px;
+                    border-radius: 10px;
+                    object-fit: cover;
+                }
             }
         }
     }
@@ -130,6 +138,11 @@
             padding: 20px;
             border-radius: 10px;
             font-style: 16px;
+
+            &:disabled{
+            cursor: not-allowed;
+
+            }
         }
         .emoji {
             position: relative;
@@ -141,12 +154,17 @@
             }
         }
         .sendButton {
-            background: #5183fe;
+            background-color: #5183fe;
             color: white;
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+
+            &:disabled {
+                background-color: #5182fe83;
+                cursor: not-allowed;
+            }
         }
     }
 }
