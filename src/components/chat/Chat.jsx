@@ -70,6 +70,7 @@ const Chat = () => {
             await updateDoc(doc(db, "chats", chatId), {
                 messages: arrayUnion({
                     senderId: currentUser.id,
+                    senderName: currentUser.username, // Adding sender's username
                     text,
                     createdAt: new Date(),
                     ...(imgUrl && { img: imgUrl }),
@@ -120,8 +121,7 @@ const Chat = () => {
                     <div className="texts">
                         <span>{user?.username}</span>
                         <p>
-                            Lorem ipsum, dolor sit amet consectetur adipisicing
-                            elit.
+                            Welcome to Ettronics Chat App!
                         </p>
                     </div>
                 </div>
@@ -140,6 +140,9 @@ const Chat = () => {
                         key={index}
                     >
                         <div className="texts">
+                            <span style={{ fontWeight: "bold" }}>
+                                {message.senderName}:
+                            </span>
                             {message.img && <img src={message.img} alt="" />}
                             <p>{message.text}</p>
                             <span style={{ fontSize: "10px" }}>

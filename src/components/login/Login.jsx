@@ -36,8 +36,7 @@ const Login = () => {
 
         try {
             await signInWithEmailAndPassword(auth, email, password);
-                        toast.success("SUCCESSFUL");
-
+            toast.success("SUCCESSFUL");
         } catch (err) {
             toast.error(err.message);
         } finally {
@@ -84,7 +83,11 @@ const Login = () => {
     return (
         <div className="login">
             <div className="item">
-                <h2>Welcome back,</h2>
+                <div className="logo">
+                    <img src="/ett_logo.jpg" alt="" />
+                    <h3>Ettronics Chat App</h3>
+                </div>
+                <h2>Login</h2>
                 <form onSubmit={handleLogin}>
                     <input type="text" placeholder="Email" name="email" />
                     <input

@@ -6,6 +6,19 @@
     gap: 100px;
     padding: 0 200px 0 200px;
 
+    .logo {
+        padding-bottom: 50px;
+        float: left;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        img {
+            width: 50px;
+            border-radius: 50%;
+        }
+    }
+
     .item {
         flex: 1;
         display: flex;

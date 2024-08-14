@@ -64,6 +64,19 @@
             max-width: 70%;
             display: flex;
             gap: 20px;
+            p {
+                border-left: 1px solid red;
+                border-right: 1px solid blue;
+                border-bottom: 1px solid green;
+                border-top: 1px solid gray;
+                background-color: #5182fe07;
+                padding: 10px;
+                border-radius: 20px;
+                border-top-left-radius: 0px;
+                border-bottom-right-radius: 0px;
+                margin: auto;
+                width: auto;
+            }
 
             &.own {
                 align-self: flex-end;
@@ -74,17 +87,6 @@
                         border-radius: 10px;
                         object-fit: cover;
                         margin-left: 125px;
-                    }
-                    p {
-                        border-left: 1px solid red;
-                        border-right: 1px solid blue;
-                        border-bottom: 1px solid green;
-                        border-top: 1px solid gray;
-                        background-color: #5182fe07;
-                        padding: 10px;
-                        border-radius: 20px;
-                        border-top-left-radius: 0px;
-                        border-bottom-right-radius: 0px;
                     }
                 }
             }
@@ -139,9 +141,8 @@
             border-radius: 10px;
             font-style: 16px;
 
-            &:disabled{
-            cursor: not-allowed;
-
+            &:disabled {
+                cursor: not-allowed;
             }
         }
         .emoji {
